@@ -1,26 +1,163 @@
 @import "tailwindcss";
+@import "./motion.css";
 
+/* ---------------------------------------------------------------------------
+   OutWest Creative House — brand tokens. See docs/BRAND.md.
+   --------------------------------------------------------------------------- */
+
+@theme {
+  /* Palette — exact hexes from the brand guide. */
+  --color-alabaster: #f0ebe2;
+  --color-canvas: #ddd2c6;
+  --color-river-clay: #998b7c;
+  --color-horizon: #b1bac8;
+  --color-agave: #b1b280;
+  --color-olive: #6b6644;
+  --color-desert-rose: #c4957a;
+  --color-adobe: #865336;
+  --color-ink: #010203;
+  --color-white: #ffffff;
+
+  /* Type. Families are loaded in src/fonts and expose --font-abril /
+     --font-hanken / --font-preztik on <html>. */
+  --font-sans: var(--font-hanken);
+  --font-display: var(--font-abril);
+  --font-accent: var(--font-preztik);
+
+  /* Editorial tracking. The brand sets display type in wide caps. */
+  --tracking-wordmark: 0.32em;
+  --tracking-eyebrow: 0.22em;
+  --tracking-display: 0.12em;
+
+  /* Quiet motion — "subtle animations support rather than distract". */
+  --ease-editorial: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-drift: cubic-bezier(0.33, 0, 0.12, 1);
+
+  /* Display tracking is wrong on a four-character figure: a numeral that large needs
+     less air between glyphs, not more. */
+  --tracking-numeral: 0.02em;
+}
+
+/* Semantic roles. Alabaster is the brand's default canvas, ink its text. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-alabaster);
+  --foreground: var(--color-ink);
+  --muted: var(--color-river-clay);
+  --surface: var(--color-canvas);
+  --rule: color-mix(in srgb, var(--color-river-clay) 32%, transparent);
+
+  /* Preztik's variable axis is non-standard — its named instances do not sit on
+     the usual CSS weight scale. Use these when you need a designer-exact weight. */
+  --weight-preztik-extralight: 1;
+  --weight-preztik-light: 200.5;
+  --weight-preztik-regular: 400;
+  --weight-preztik-medium: 520;
+  --weight-preztik-semibold: 640;
+  --weight-preztik-bold: 760;
+  --weight-preztik-extrabold: 880;
+  --weight-preztik-black: 1000;
+}
+
+/**
+ * Tonal inversion. A section declares a tone; every descendant reads these tokens, so no
+ * component needs a colour variant and dark sections stay *surfaces* rather than a theme.
+ *
+ * CONTRAST — computed, not asserted. River Clay #998B7C measures 2.79:1 on Alabaster and
+ * 2.23:1 on Canvas: it fails WCAG AA for body copy AND for large text, so it is never
+ * used for text on a light ground despite BRAND.md naming it "secondary text". It is
+ * correct on Ink (6.27:1) and for hairlines, which are not text.
+ *
+ * The mixes below resolve to 5.03:1 (paper), 4.99:1 (canvas), 4.90:1 (olive dim) and
+ * 6.27:1 (ink) — a real second tier that passes AA everywhere. Primary ink on Alabaster
+ * is 17.49:1, so the dim tier reads as a genuine second level, not a second run of black.
+ */
+:root,
+[data-tone="paper"] {
+  --ground: var(--color-alabaster);
+  --on-ground: var(--color-ink);
+  --on-ground-dim: color-mix(in srgb, var(--color-river-clay) 70%, var(--color-ink));
+  --rule: color-mix(in srgb, var(--color-river-clay) 32%, transparent);
+}
+[data-tone="canvas"] {
+  --ground: var(--color-canvas);
+  --on-ground: var(--color-ink);
+  --on-ground-dim: color-mix(in srgb, var(--color-river-clay) 60%, var(--color-ink));
+  --rule: color-mix(in srgb, var(--color-river-clay) 46%, transparent);
+}
+[data-tone="olive"] {
+  --ground: var(--color-olive);
+  /* White rather than Alabaster as primary: it buys a two-step hierarchy on the one
+     surface where River Clay at 1.76:1 is unusable. */
+  --on-ground: var(--color-white);
+  --on-ground-dim: var(--color-alabaster);
+  --rule: color-mix(in srgb, var(--color-alabaster) 36%, transparent);
+}
+[data-tone="ink"] {
+  --ground: var(--color-ink);
+  --on-ground: var(--color-alabaster);
+  --on-ground-dim: var(--color-river-clay);
+  --rule: color-mix(in srgb, var(--color-river-clay) 45%, transparent);
+}
+
+/* Plate focal point. */
+[data-plate] img {
+  object-position: var(--focal, 50% 50%);
+}
+
+/* Display type may wrap at narrow widths rather than overflow. */
+.display-line {
+  overflow-wrap: break-word;
+  hyphens: none;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-rule: var(--rule);
+  --color-ground: var(--ground);
+  --color-on-ground: var(--on-ground);
+  --color-on-ground-dim: var(--on-ground-dim);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-hanken);
+}
+
+/**
+ * These MUST stay inside @layer components. Unlayered rules beat every layered rule
+ * regardless of specificity, so an unlayered .eyebrow silently defeats any Tailwind
+ * utility on the same element — text-base, tracking-normal and normal-case all lose,
+ * which made TextLink's size prop inert sitewide until this was layered.
+ */
+@layer components {
+  /* Paragraph header — Preztik Light Italic, per the brand guide. */
+  .paragraph-header {
+    font-family: var(--font-preztik);
+    font-weight: var(--weight-preztik-light);
+    font-style: italic;
+  }
+
+  /* Small tracked caps — the brand's label/eyebrow treatment. */
+  .eyebrow {
+    font-family: var(--font-hanken);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
