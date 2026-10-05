@@ -24,6 +24,51 @@ type RevealProps = {
   children?: React.ReactNode;
 };
 
+/** Longest a reveal will wait on its photographs before animating anyway. */
+const MAX_IMAGE_WAIT = 1200;
+
+function lazyImages(el: Element) {
+  return el.querySelectorAll<HTMLImageElement>('img[loading="lazy"]');
+}
+
+/**
+ * Native lazy-loading never fires for an image inside the wipe's pre-state: the browser
+ * runs its own intersection check, and `clip-path: inset(0 0 100% 0)` collapses that to
+ * zero area — so the fetch only began once the wipe started opening, and the blur
+ * placeholder was what got uncovered. This observer does the browser's job instead,
+ * flipping images to eager well before they reach the viewport.
+ */
+let preloadIo: IntersectionObserver | null = null;
+function preloader() {
+  if (preloadIo) return preloadIo;
+  preloadIo = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        for (const img of lazyImages(e.target)) img.loading = "eager";
+        preloadIo!.unobserve(e.target);
+      }
+    },
+    { rootMargin: "150% 0px" },
+  );
+  return preloadIo;
+}
+
+/**
+ * Resolves once every photograph in `el` has loaded and decoded, so the gesture never
+ * uncovers a placeholder on a fast scroll or slow connection. Capped, so a stalled
+ * request delays the reveal rather than cancelling it.
+ */
+function imagesReady(el: Element) {
+  const pending = [...el.querySelectorAll("img")].filter((img) => !img.complete);
+  if (pending.length === 0) return Promise.resolve();
+  for (const img of pending) img.loading = "eager";
+  return Promise.race([
+    Promise.allSettled(pending.map((img) => img.decode())),
+    new Promise((r) => setTimeout(r, MAX_IMAGE_WAIT)),
+  ]);
+}
+
 /** One observer for the whole app, created lazily. */
 let io: IntersectionObserver | null = null;
 function observer() {
@@ -32,8 +77,9 @@ function observer() {
     (entries) => {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
-        e.target.setAttribute("data-revealed", "");
-        io!.unobserve(e.target);
+        const target = e.target;
+        io!.unobserve(target);
+        imagesReady(target).then(() => target.setAttribute("data-revealed", ""));
       }
     },
     { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
@@ -70,7 +116,12 @@ export function Reveal({
     if (document.documentElement.getAttribute("data-motion") !== "on") return;
     const obs = observer();
     obs.observe(el);
-    return () => obs.unobserve(el);
+    const pre = lazyImages(el).length > 0 ? preloader() : null;
+    pre?.observe(el);
+    return () => {
+      obs.unobserve(el);
+      pre?.unobserve(el);
+    };
   }, [gesture]);
 
   return (
