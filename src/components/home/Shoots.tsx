@@ -16,7 +16,7 @@ const SIZES = "(min-width: 768px) 28vw, 100vw";
  *
  * NINE SHOOTS IN ONE VIEWPORT, not nine beats. Each shoot opens into a sheet rather than
  * scrolling past as its own spread, so a visitor reads the menu first and goes deep only
- * on the one they came for. It replaces the old two-column MADE OUT WEST run, which was
+ * on the one they came for. It replaces the old two-column MADE OUTWEST run, which was
  * the longest stretch of scroll on the page; MadeOutWest.tsx is untouched and can go
  * back into page.tsx in one line.
  *

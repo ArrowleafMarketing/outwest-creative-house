@@ -9,7 +9,7 @@ import { aroundTheHouse, series, workClose, workIntro } from "@/content/work";
 import { bySeries } from "@/photos";
 
 export const metadata: Metadata = {
-  title: "Made Out West · OutWest Creative House",
+  title: "Made OutWest · OutWest Creative House",
   description:
     "Campaigns, editorials, portraits and product work made at OutWest Creative House in Boise, Idaho.",
 };

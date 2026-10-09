@@ -20,7 +20,7 @@ type GalleryProps = {
 
 /**
  * Hanging positions, cycled down each column. Each frame is hung at its own width from its
- * own edge so nothing lines up across the gutter — the MADE OUT WEST device from the
+ * own edge so nothing lines up across the gutter — the MADE OUTWEST device from the
  * homepage, generalised so any list of frames can be laid out the same way rather than as a
  * uniform grid.
  *

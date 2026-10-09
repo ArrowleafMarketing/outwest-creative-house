@@ -49,7 +49,7 @@ const OVERLAP_SLUG = "dsc-8635";
  *
  * UPGRADE PATH: the roles line is the thing on this page that wants better assets most. As
  * soon as the library holds a filmmaker, a founder or an agency shoot, it can become a row
- * of small plates keyed to the words, or each word can link into MADE OUT WEST filtered by
+ * of small plates keyed to the words, or each word can link into MADE OUTWEST filtered by
  * discipline. Today it is a typographic statement that costs nothing and claims nothing it
  * cannot support.
  */

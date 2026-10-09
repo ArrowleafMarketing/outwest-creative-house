@@ -168,7 +168,7 @@ function Column({
  */
 export function MadeOutWest() {
   return (
-    <Surface id="made-out-west" tone="paper" rhythm="vast">
+    <Surface id="made-outwest" tone="paper" rhythm="vast">
       <Statement
         eyebrow={madeOutWest.eyebrow}
         lines={madeOutWest.lines}

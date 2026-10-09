@@ -1,5 +1,5 @@
 /**
- * MADE OUT WEST — /made-out-west, the full portfolio.
+ * MADE OUTWEST — /made-outwest, the full portfolio.
  *
  * Organised by shoot rather than by category, because a series is how the work was made
  * and how a client will recognise it. Each series' frames are read live from

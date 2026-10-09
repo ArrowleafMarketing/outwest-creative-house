@@ -13,7 +13,7 @@ export const nav = [
   { label: "THE HOUSE", href: "/the-house" },
   { label: "THE ICONS", href: "/the-icons" },
   { label: "THE COLLECTIVE", href: "/the-collective" },
-  { label: "MADE OUT WEST", href: "/made-out-west" },
+  { label: "MADE OUTWEST", href: "/made-outwest" },
   { label: "ABOUT", href: "/about" },
 ] as const;
 
@@ -56,7 +56,7 @@ export const statement = {
 } as const;
 
 export const manifesto = {
-  eyebrow: "WELCOME OUT WEST",
+  eyebrow: "WELCOME OUTWEST",
   lines: ["NOT JUST A STUDIO.", "A PLACE TO MAKE", "SOMETHING MATTER."],
   lead: "OutWest is not a photography studio. It is a creative house — a place for independent creatives, brands and businesses to make work that gets remembered.",
   body: [
@@ -263,9 +263,9 @@ export const shoots = [
 
 export const madeOutWest = {
   eyebrow: "SELECTED WORK",
-  lines: ["MADE OUT WEST"],
+  lines: ["MADE OUTWEST"],
   lead: "Different photographers. Different brands. Different aesthetics. That is the point.",
-  action: { label: "SEE EVERYTHING MADE OUT WEST", href: "/made-out-west" },
+  action: { label: "SEE EVERYTHING MADE OUTWEST", href: "/made-outwest" },
 } as const;
 
 /**
@@ -295,7 +295,7 @@ export const yucca = {
 } as const;
 
 export const closer = {
-  lines: ["WHAT WILL", "YOU MAKE", "OUT WEST?"],
+  lines: ["WHAT WILL", "YOU MAKE", "OUTWEST?"],
   action: { label: "BOOK OUTWEST", href: "/book" },
   slug: "photo-07-08-2025-11-08-00-34",
 } as const;
@@ -304,7 +304,7 @@ export const footer = {
   address: ["OutWest Creative House", "Boise, Idaho"],
   columns: [
     { title: "THE HOUSE", links: [ { label: "The Warehouse", href: "/the-house/warehouse" }, { label: "The Villa", href: "/the-house/villa" }, { label: "The Creative Lounge", href: "/the-house/lounge" } ] },
-    { title: "THE WORK", links: [ { label: "Made Out West", href: "/made-out-west" }, { label: "The Icons", href: "/the-icons" } ] },
+    { title: "THE WORK", links: [ { label: "Made OutWest", href: "/made-outwest" }, { label: "The Icons", href: "/the-icons" } ] },
     { title: "JOIN", links: [ { label: "The Collective", href: "/the-collective" }, { label: "Book the house", href: "/book" }, { label: "About", href: "/about" } ] },
   ],
 } as const;
