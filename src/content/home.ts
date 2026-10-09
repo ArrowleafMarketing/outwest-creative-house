@@ -37,6 +37,16 @@ export const cover = {
   lines: ["OUTWEST"],
   sub: "CREATIVE HOUSE",
   action: { label: "ENTER THE HOUSE", href: "#the-house" },
+  /**
+   * The cover collage, back to front. `lead` is the large frame and the LCP image; `cross`
+   * overlaps its lower-left corner; `detail` is pinned small at the bottom right. Two people
+   * and one room, so the first screen says light, people and place at once.
+   */
+  frames: {
+    lead: "dsc-8936",
+    cross: "rambler-x-westbound-094",
+    detail: "a7502873",
+  },
 } as const;
 
 export const statement = {
@@ -141,6 +151,114 @@ export const work = [
   { slug: "taylor-schiers-118", credit: "TAYLOR SCHIERS", kind: "Brand campaign", width: "w-full", align: "start", column: 1 },
   { slug: "rambler-x-westbound-052", credit: "RAMBLER × WESTBOUND", kind: "Fashion editorial", width: "w-[78%]", align: "end", column: 1 },
   { slug: "dsc-9509", kind: "Detail", width: "w-[60%]", align: "start", column: 1 },
+] as const;
+
+/**
+ * ⚠ DRAFT COPY — every `lead` and `copy` below was written during the build and has not
+ * been through the owner pass. None of it states a price, a capacity or an amenity the
+ * house has not already claimed elsewhere on this page; keep it that way when editing.
+ *
+ * `where` names entries in `spaces` by their exact `name`, so a renamed space has to be
+ * renamed here too. The pairings are suggestions, not a booking rule — confirm with the
+ * owner.
+ *
+ * FRAMES. Family, couples and weddings show the house EMPTY, because the library has no
+ * family, couple or wedding work in it yet. An unpeopled room claims nothing; a fashion
+ * frame filed under WEDDINGS & BRIDAL would claim a wedding that never happened. Swap the
+ * slug the day real work arrives. `focal` is the object-position for the 4:5 crop.
+ */
+export const shootsIntro = {
+  eyebrow: "BRING THE WORK",
+  lines: ["WHAT ARE YOU", "SHOOTING FOR?"],
+  lead: "Nine reasons people book the house. Pick yours and see how it comes together here.",
+  where: "WHERE IT HAPPENS",
+  next: "NEXT",
+  action: { label: "BOOK THIS SHOOT", href: "/book" },
+} as const;
+
+export const shoots = [
+  {
+    no: "01",
+    name: "TEAM BUILDING SHOOTS",
+    lead: "Bring the whole crew. Leave with photos everyone actually likes.",
+    copy: "Headshots, group frames and the unplanned ones in between. Room for the whole team to spread out, change outfits and keep the energy up — it ends up feeling more like an outing than an appointment.",
+    where: ["THE WAREHOUSE", "THE CREATIVE LOUNGE"],
+    slug: "dsc-8740",
+    focal: "50% 30%",
+  },
+  {
+    no: "02",
+    name: "FAMILY & MOTHERHOOD",
+    lead: "The season you'll want to remember exactly as it was.",
+    copy: "Maternity, newborn and family sessions in soft natural light, with comfortable corners to settle into between frames and space for little ones to wander.",
+    where: ["THE VILLA", "THE CREATIVE LOUNGE"],
+    slug: "a7500862",
+    focal: "38% 50%",
+  },
+  {
+    no: "03",
+    name: "PORTRAITS & MILESTONES",
+    lead: "Graduations, birthdays, new chapters — the frames that mark a year.",
+    copy: "Seniors, headshots, anniversaries and the portrait you've been meaning to make for years. A clean sweep for something timeless, plaster and olive trees for something warmer.",
+    where: ["THE WAREHOUSE", "THE VILLA"],
+    slug: "dsc-9070",
+    focal: "50% 25%",
+  },
+  {
+    no: "04",
+    name: "BRANDING & CONTENT",
+    lead: "Content for the months ahead, made in a single booking.",
+    copy: "Founders, creators and small teams build the library their brand runs on — headshots, lifestyle, social and web — across three distinct sets without ever changing locations.",
+    where: ["THE WAREHOUSE", "THE VILLA", "THE CREATIVE LOUNGE"],
+    slug: "dscf3201",
+    focal: "50% 30%",
+  },
+  {
+    no: "05",
+    name: "COUPLES & ENGAGEMENTS",
+    lead: "Two people, good light, and nowhere else to be.",
+    copy: "Engagements, anniversaries and save-the-dates, unhurried and out of the weather, with enough variety in the house that it never looks like one backdrop.",
+    where: ["THE VILLA", "THE CREATIVE LOUNGE"],
+    slug: "a7500769",
+    focal: "34% 50%",
+  },
+  {
+    no: "06",
+    name: "VIDEO & CAMPAIGN PRODUCTION",
+    lead: "Room for the crew, the gear and the second take.",
+    copy: "Brand films, commercials, music videos and full campaign days. A cyc wall, high ceilings and enough floor to build a set, light it properly and still keep hair, makeup and the client monitor out of frame.",
+    where: ["THE WAREHOUSE"],
+    slug: "photo-07-08-2025-11-37-24-99",
+    focal: "38% 50%",
+  },
+  {
+    no: "07",
+    name: "COMMERCIAL & PRODUCT",
+    lead: "Make the product the most interesting thing in the room.",
+    copy: "Tabletop, e-commerce, packaging and lifestyle product work — from clean white sweeps to styled sets with texture and hard window light.",
+    where: ["THE WAREHOUSE", "THE VILLA"],
+    slug: "dsc-9456",
+    focal: "50% 40%",
+  },
+  {
+    no: "08",
+    name: "WEDDINGS & BRIDAL",
+    lead: "The quiet hour before the day begins — or the portraits after.",
+    copy: "Bridal portraits, getting-ready coverage, elopements and styled shoots. The Villa's plaster arches and olive trees read like somewhere else entirely, without leaving Boise.",
+    where: ["THE VILLA"],
+    slug: "a7500748",
+    focal: "50% 50%",
+  },
+  {
+    no: "09",
+    name: "CREATIVE PROJECTS",
+    lead: "The idea that doesn't fit a category. Bring it anyway.",
+    copy: "Editorials, fashion, personal work, test shoots and the concept you've been sketching for months. If it needs light, room and a little nerve, it belongs here.",
+    where: ["THE WAREHOUSE", "THE VILLA", "THE CREATIVE LOUNGE"],
+    slug: "rambler-x-westbound-097",
+    credit: "RAMBLER × WESTBOUND",
+    focal: "55% 50%",
+  },
 ] as const;
 
 export const madeOutWest = {

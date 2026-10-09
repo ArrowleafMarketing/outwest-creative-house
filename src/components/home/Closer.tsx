@@ -1,16 +1,11 @@
-import { Plate, Statement, Surface, TextLink } from "@/components/editorial";
+import { Statement, Surface, TextLink } from "@/components/editorial";
 import { Reveal } from "@/components/motion/Reveal";
 import { closer } from "@/content/home";
 
 /**
- * The band is its own Surface at gutter={false}, so the plate is genuinely edge to edge at
- * every viewport. Stated rather than guessed, because a full-bleed frame is exactly the
- * one a defaulted `sizes` ships at twice the pixels it needs.
- */
-const SIZES_BAND = "100vw";
-
-/**
- * Beat 12 — the last screen.
+ * Beat 12 — the last screen. Its photograph is no longer set here: it belongs to the
+ * footer now, which stages itself inside the frame (see site/Footer.tsx). The notes on the
+ * frame below still apply to it there.
  *
  * ⚠ THE BEAT ASKED FOR A GOLDEN-HOUR EXTERIOR — someone walking out through the warehouse
  * doors as the light goes. There is no exterior, no doorway and no golden hour anywhere in
@@ -31,39 +26,26 @@ const SIZES_BAND = "100vw";
  * given away.
  *
  * MOBILE: the headline sits at colossal's 12vw floor over the authored line breaks, each
- * of which may still wrap further rather than overflow; the band runs full width at its
- * native ratio, which needs no art direction and crops nothing.
+ * of which may still wrap further rather than overflow.
  */
 export function Closer() {
   return (
-    <>
-      <Surface tone="paper" rhythm="vast">
-        <Statement size="colossal" as="h2" align="center" lines={closer.lines} />
+    <Surface tone="paper" rhythm="vast">
+      <Statement size="colossal" as="h2" align="center" lines={closer.lines} />
 
-        {/*
-         * Not Statement's own `action`, which is eyebrow-sized and spaced for a beat that
-         * has body copy above it. The index continues Statement's fixed entrance order
-         * (eyebrow 0, lines 1..n, lead, body, action) so the closing link still lands last,
-         * exactly as the action does in the other eleven beats.
-         *
-         * text-center is what centres it: TextLink is inline-flex, which is inline-level.
-         */}
-        <Reveal gesture="rise" i={closer.lines.length + 3} className="mt-14 text-center">
-          <TextLink href={closer.action.href} size="lg">
-            {closer.action.label}
-          </TextLink>
-        </Reveal>
-      </Surface>
-
-      <Surface tone="paper" rhythm="flush" gutter={false}>
-        {/*
-         * `settle` — the image scales 1.045→1 with no opacity change, so the figure appears
-         * to keep walking as the frame lands. The photograph's own motion plus a slow scale
-         * is the closest this library gets to film, and it costs nothing. A `wipe` here
-         * would uncover a still; this one arrives.
-         */}
-        <Plate slug={closer.slug} ratio="native" sizes={SIZES_BAND} reveal="settle" />
-      </Surface>
-    </>
+      {/*
+       * Not Statement's own `action`, which is eyebrow-sized and spaced for a beat that
+       * has body copy above it. The index continues Statement's fixed entrance order
+       * (eyebrow 0, lines 1..n, lead, body, action) so the closing link still lands last,
+       * exactly as the action does in the other eleven beats.
+       *
+       * text-center is what centres it: TextLink is inline-flex, which is inline-level.
+       */}
+      <Reveal gesture="rise" i={closer.lines.length + 3} className="mt-14 text-center">
+        <TextLink href={closer.action.href} size="lg">
+          {closer.action.label}
+        </TextLink>
+      </Reveal>
+    </Surface>
   );
 }

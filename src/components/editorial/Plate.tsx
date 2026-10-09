@@ -4,6 +4,9 @@ import { Reveal } from "@/components/motion/Reveal";
 
 type Ratio = "native" | "3/2" | "2/3" | "4/5" | "1/1" | "16/9" | "2/1";
 
+/** Which way the image travels inside its frame as the page scrolls down. */
+export type PlateDrift = "left" | "right" | "up" | "down";
+
 type PlateProps = {
   slug: string;
   ratio?: Ratio;
@@ -18,7 +21,19 @@ type PlateProps = {
   credit?: string;
   kind?: string;
   rail?: string;
-  reveal?: "wipe" | "settle" | "none";
+  /** `settle` is for the LCP plate and the closing frame only. */
+  reveal?: "settle" | "none";
+  /**
+   * The photograph is on the page from first paint and only shifts a few percent inside
+   * its frame across the scroll. Give neighbouring plates different directions so they
+   * move against each other. Omit for stillness.
+   */
+  drift?: PlateDrift;
+  /**
+   * Hold the frame still and move only the image inside it. For plates that run to a
+   * viewport edge, where a travelling frame would open a gap against the edge.
+   */
+  anchored?: boolean;
   alt?: string;
   className?: string;
 };
@@ -54,7 +69,9 @@ export function Plate({
   credit,
   kind,
   rail,
-  reveal = "wipe",
+  reveal = "none",
+  drift,
+  anchored,
   alt,
   className,
 }: PlateProps) {
@@ -63,15 +80,17 @@ export function Plate({
 
   return (
     /**
-     * The gesture wraps ONLY the image frame, never the figure.
+     * The gesture and the clip wrap ONLY the image frame, never the figure, so the
+     * rail — which sits at -left-6, outside the figure's box — is never clipped, and the
+     * caption arrives on its own rather than travelling with the photograph.
      *
-     * clip-path clips absolutely-positioned descendants too, so a wipe on the figure
-     * made the rail — which sits at -left-6, outside the figure's box — invisible for
-     * as long as motion was enabled, and swept the caption along with the photograph
-     * instead of letting it arrive on its own.
+     * The drift sits on the figure: the whole plate, caption and rail included, travels
+     * about a title's distance one way while the image inside it pans the other.
      */
     <figure
       data-plate
+      data-plate-drift={drift}
+      data-plate-anchored={anchored ? "" : undefined}
       className={`relative ${className ?? ""}`}
       style={focal ? ({ "--focal": focal } as React.CSSProperties) : undefined}
     >
@@ -84,7 +103,7 @@ export function Plate({
         </span>
       ) : null}
 
-      {/* the wipe's clip-path and any Drift on the image both need this frame */}
+      {/* clips the image as it pans inside the frame */}
       <Reveal gesture={reveal} className="block overflow-hidden">
         {ratio === "native" ? (
           <Photo photo={p} sizes={sizes} eager={eager} alt={alt} className="block h-auto w-full" />

@@ -68,7 +68,9 @@ export function Collective() {
         align="center"
         gap="wide"
         bleed="left"
-        left={<Plate slug={PLATE_SLUG} ratio="native" sizes={SIZES_PLATE} reveal="wipe" />}
+        // Vertical drift only: the plate bleeds to the left edge, where sideways travel
+        // would open a gap.
+        left={<Plate slug={PLATE_SLUG} ratio="native" sizes={SIZES_PLATE} drift="down" />}
         right={
           /*
            * ⚠ NO BODY COPY. The spec calls for a paragraph under these lines — the one

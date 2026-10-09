@@ -7,7 +7,7 @@ import { TheHouse } from "@/components/home/TheHouse";
 import { Scale } from "@/components/home/Scale";
 import { People } from "@/components/home/People";
 import { Icons } from "@/components/home/Icons";
-import { MadeOutWest } from "@/components/home/MadeOutWest";
+import { Shoots } from "@/components/home/Shoots";
 import { Collective } from "@/components/home/Collective";
 import { Booking } from "@/components/home/Booking";
 import { YuccaMoment } from "@/components/home/YuccaMoment";
@@ -46,7 +46,7 @@ export default function Home() {
         <Scale />
         <People />
         <Icons />
-        <MadeOutWest />
+        <Shoots />
         <Collective />
         <Booking />
         <YuccaMoment />

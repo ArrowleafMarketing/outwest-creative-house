@@ -21,9 +21,7 @@ type DriftProps = {
  * Composes with Reveal on the same element — Reveal animates translate/scale/clip-path,
  * Drift animates transform, so they never overwrite each other.
  *
- * When wrapping an image, the image must sit inside an overflow-hidden frame at
- * scale(1.04) so a ±1.5rem translate can never expose an edge. Plate provides the frame;
- * the caller adds the scale with `[&_img]:scale-[1.04]`.
+ * For type. Photographs drift inside their own frame instead — use Plate's `drift` prop.
  */
 export function Drift({ as: As = "div", x, y, className, children }: DriftProps) {
   return (

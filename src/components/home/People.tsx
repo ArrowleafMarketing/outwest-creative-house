@@ -65,30 +65,28 @@ export function People() {
          * — several photographers working a set together — is spread across the full
          * height. A 21:9 crop would remove the evidence and keep the wallpaper.
          *
-         * The image drifts DOWN as the beat scrolls past, against the roles beneath it: 96px
-         * of opposed travel, the page's clearest counter-movement. The scale sits on the img
-         * so the ±1.5rem translate can never expose an edge inside Plate's own frame.
+         * The image drifts DOWN inside its frame as the beat scrolls past, against the
+         * roles beneath it, which travel up: the page's clearest counter-movement.
+         * Anchored, because the band runs edge to edge and flush with the beats around
+         * it — a travelling frame would open a seam.
          */}
-        <Drift y={["-1.5rem", "1.5rem"]} className="[&_img]:scale-[1.04]">
-          <Plate slug={BAND_SLUG} ratio="native" sizes="100vw" reveal="wipe" />
-        </Drift>
+        <Plate slug={BAND_SLUG} ratio="native" sizes="100vw" drift="down" anchored />
 
         {/*
          * Hangs below the band's lower edge, which is exactly why the type Surface carries
-         * extra top padding. Drifting the other way from the band keeps the overlap alive
-         * while it is on screen rather than freezing it into a composition.
+         * extra top padding. The plate rises across the band while the band holds still,
+         * which keeps the overlap alive while it is on screen rather than freezing it into
+         * a composition. Vertical only: it runs off the right edge, so any sideways travel
+         * would pull it away from the edge and open a gap.
          */}
-        <Drift
-          y={["2rem", "-2rem"]}
-          className="absolute -bottom-[12%] right-0 z-10 w-[46vw] md:-bottom-[18%] md:w-[22vw]"
-        >
+        <div className="absolute -bottom-[12%] right-0 z-10 w-[46vw] md:-bottom-[18%] md:w-[22vw]">
           <Plate
             slug={OVERLAP_SLUG}
             ratio="native"
             sizes="(min-width: 768px) 24vw, 46vw"
-            reveal="wipe"
+            drift="down"
           />
-        </Drift>
+        </div>
       </Surface>
 
       {/* pt-28 md:pt-40 clears the overlap plate hanging out of the band above. */}

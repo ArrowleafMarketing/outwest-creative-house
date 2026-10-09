@@ -71,7 +71,7 @@ export function Manifesto() {
             slug={PLATE_SLUG}
             sizes="(min-width: 768px) 46vw, 100vw"
             rail={RAIL}
-            reveal="wipe"
+            drift="down"
           />
         }
       />

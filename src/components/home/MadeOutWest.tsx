@@ -1,5 +1,5 @@
 import { Plate, Spread, Statement, Surface, TextLink } from "@/components/editorial";
-import { Drift } from "@/components/motion/Drift";
+import type { PlateDrift } from "@/components/editorial/Plate";
 import { Reveal } from "@/components/motion/Reveal";
 import { madeOutWest, work } from "@/content/home";
 
@@ -75,15 +75,26 @@ function creditOf(entry: WorkEntry) {
   return "credit" in entry ? entry.credit : undefined;
 }
 
+/**
+ * Read as a cycle by position, so adjacent plates — down a column, across the gutter,
+ * and in the interleaved phone order — never travel the same way.
+ */
+const DRIFT_CYCLE: readonly PlateDrift[] = ["down", "right", "down", "left"];
+function driftAt(n: number) {
+  return DRIFT_CYCLE[n % DRIFT_CYCLE.length];
+}
+
 function WorkPlate({
   entry,
   sizes,
   rail,
+  drift,
   className,
 }: {
   entry: WorkEntry;
   sizes: string;
   rail?: string;
+  drift: PlateDrift;
   className?: string;
 }) {
   return (
@@ -94,15 +105,22 @@ function WorkPlate({
       credit={creditOf(entry)}
       kind={entry.kind}
       rail={rail}
-      // No stagger index anywhere in this beat: the plates sit far enough apart
-      // vertically that a staggered tail would never be perceived, only waited for.
-      reveal="wipe"
+      drift={drift}
       className={className}
     />
   );
 }
 
-function Column({ items, rail }: { items: readonly WorkEntry[]; rail?: string }) {
+function Column({
+  items,
+  rail,
+  offset = 0,
+}: {
+  items: readonly WorkEntry[];
+  rail?: string;
+  /** Shifts the drift cycle so this column's plates oppose the other column's. */
+  offset?: number;
+}) {
   return (
     <>
       {items.map((entry, i) => (
@@ -111,6 +129,7 @@ function Column({ items, rail }: { items: readonly WorkEntry[]; rail?: string })
           entry={entry}
           sizes={columnSizes(entry.width)}
           rail={i === 0 ? rail : undefined}
+          drift={driftAt(i + offset)}
           // `width` is a percentage of the column and `align` decides which edge it hangs
           // from, both authored per frame in content/home.ts. That pairing — not the
           // grid — is what guarantees nothing lines up across the gutter.
@@ -127,8 +146,9 @@ function Column({ items, rail }: { items: readonly WorkEntry[]; rail?: string })
  * NOT A PORTFOLIO GRID. A grid flattens ten photographs into ten equal claims, and the
  * lead's whole argument is that they are not equal. The magazine rhythm here is LAYOUT
  * rather than differential scroll rate: a static 12rem column offset, a hand-authored
- * width per plate, and 96px of opposed drift. Two CSS animations, zero JavaScript, and
- * identical under prefers-reduced-motion.
+ * width per plate, and each photograph drifting a few percent inside its own frame, in a
+ * direction opposed to its neighbours. Pure CSS, zero JavaScript, and perfectly still
+ * under prefers-reduced-motion.
  *
  * THE RANGE IS THE ARGUMENT, so the selection in content/home.ts is deliberately
  * incompatible with itself — warm cream western beside a black-and-white group beside a
@@ -165,10 +185,16 @@ export function MadeOutWest() {
        * so its lazy images are never in a viewport and are never fetched.
        */}
       <div className="mt-12 space-y-12 md:hidden">
-        {interleaved.map((entry) => (
+        {interleaved.map((entry, i) => (
           // Full width at native ratio on a phone. The authored percentages are a
           // two-column device; at one column they would just make the work small.
-          <WorkPlate key={entry.slug} entry={entry} sizes={MOBILE_SIZES} className="w-full" />
+          <WorkPlate
+            key={entry.slug}
+            entry={entry}
+            sizes={MOBILE_SIZES}
+            drift={driftAt(i)}
+            className="w-full"
+          />
         ))}
       </div>
 
@@ -176,32 +202,22 @@ export function MadeOutWest() {
         <Spread
           split="6/6"
           gap="wide"
-          // Drops the right column 12rem. Combined with the opposed drift below, nothing
-          // ever aligns across the gutter at any scroll position.
+          // Drops the right column 12rem, so nothing aligns across the gutter. The
+          // columns themselves hold still; only the images move, inside their frames.
           stagger
           // A hairline in the gutter, drawn by the right slot's leading edge so it needs
           // no element of its own. border-rule reads the Surface tone, so the rule is
           // correct on any ground this beat is ever moved to.
           className="md:[&>*+*]:border-s md:[&>*+*]:border-rule md:[&>*+*]:ps-[4vw]"
           left={
-            <Drift y={["1.5rem", "-1.5rem"]} className="md:space-y-20">
+            <div className="md:space-y-20">
               <Column items={leftColumn} rail={RAIL} />
-            </Drift>
+            </div>
           }
           right={
-            // Authored symmetric about zero and opposed to the left column: where
-            // scroll-driven timelines are unsupported both columns sit at exactly their
-            // mid-scroll position, and the beat loses its counter-movement without ever
-            // looking broken.
-            //
-            // Drift wraps the whole stack, so each image travels together with the
-            // overflow-hidden frame Plate puts around it and no edge can be exposed.
-            // That is why neither column carries `[&_img]:scale-[1.04]` — the 2% crop
-            // Drift's contract asks for is only needed when the drift sits INSIDE the
-            // frame, and cropping ten client photographs for nothing is a real loss.
-            <Drift y={["-1.5rem", "1.5rem"]} className="md:space-y-20">
-              <Column items={rightColumn} />
-            </Drift>
+            <div className="md:space-y-20">
+              <Column items={rightColumn} offset={1} />
+            </div>
           }
         />
       </div>

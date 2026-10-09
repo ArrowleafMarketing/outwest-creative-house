@@ -1,7 +1,11 @@
 import { Illustration, Logo } from "@/components/brand";
-import { Surface, TextLink } from "@/components/editorial";
+import { TextLink } from "@/components/editorial";
+import { Photo } from "@/components/Photo";
+import { Drift } from "@/components/motion/Drift";
 import { Reveal } from "@/components/motion/Reveal";
-import { footer, nav, people } from "@/content/home";
+import { closer, footer, nav, people } from "@/content/home";
+import { photo } from "@/photos";
+import subjectMask from "@/photos/masks/closer-subject.webp";
 
 /**
  * ⚠ TWO FIELDS THIS BEAT NEEDS AND src/content/home.ts DOES NOT EXPORT.
@@ -31,7 +35,43 @@ import { footer, nav, people } from "@/content/home";
  */
 
 /**
- * Beat 12 — the footer, and the page's second and final Ink ground.
+ * Where the photograph and the mask are cropped from. The same point for both — the
+ * photograph's class repeats it as a literal — and it has to stay that way: the mask only lines up with the walker because both layers are
+ * `cover`-fitted to the same box from the same point. Centred on her rather than the frame
+ * (she walks slightly left of centre) so a phone's narrow crop keeps the swinging bag.
+ */
+const SCENE_POSITION = "46% 40%";
+
+/**
+ * The floor of the frame at a phone's crop, sampled from the photograph rather than taken
+ * from the palette: below lg the footer's text runs on beneath the picture, and the
+ * picture's own floor has to continue into it without a seam. Change the frame, resample.
+ */
+const FLOOR = "#e2d8c3";
+
+/**
+ * Beat 12 — the footer, set INSIDE the closing photograph.
+ *
+ * The frame is a figure walking toward the camera across an empty warm sweep, and the
+ * footer is staged into it rather than stacked under it:
+ *
+ *   - OUTWEST, at the full width of the page, stands BEHIND her. The wordmark sits in a
+ *     layer masked by her silhouette (src/photos/masks/closer-subject.webp — generated
+ *     from this frame with macOS Vision subject lifting, inverted, so it is opaque
+ *     everywhere except her), so she and the swinging bag pass in front of the letters.
+ *     It drifts sideways across the scroll, like the display lines, while she does not.
+ *   - Everything else — identity, the five destinations, the send-off, the copyright — is
+ *     set in the open sweep around her. At lg and up it sits on the photograph; below lg
+ *     there is no room beside her, so it runs on beneath, on the frame's own floor colour.
+ *
+ * WHY THE MASK IS A CSS MASK AND NOT A CUT-OUT LAYERED ON TOP. A cut-out photo on top of
+ * the wordmark would cross it the moment the cut-out loaded later than the photograph
+ * under it — the type would flash across her body. A mask image that has not loaded masks
+ * EVERYTHING, so the wordmark simply is not there until it can be correct. No JavaScript.
+ *
+ * INK ONLY ON THE PHOTOGRAPH. The sweep is bright everywhere type is set: Ink measures
+ * 11.1:1 in its darkest zone (top right) and 16:1 in its lightest. The tone's dim tier
+ * would fall to ~3.4:1 there, so nothing on the frame uses it.
  *
  * DELIBERATELY MINIMAL: no newsletter box, no amenity list, no FAQ, no sitemap wall. BOOK
  * does not reappear here either — it is permanent in the masthead, and a second filled
@@ -45,17 +85,8 @@ import { footer, nav, people } from "@/content/home";
  * It is a `ul`, not a `nav`. The masthead already publishes two navigation landmarks; a
  * third carrying the identical five destinations makes the landmark list worse, not better.
  *
- * TONE TOKENS ONLY. On Ink, Alabaster measures 17.49:1 and River Clay 6.27:1 — this is the
- * one ground where the dim tier is genuinely a second readable level rather than a second
- * run of near-black, which is the payoff for making it tone-dependent in globals.css.
- *
- * THE `<footer>` WRAPPER IS THE LANDMARK, and it is here rather than in page.tsx so this
- * component is correct wherever it is mounted. Surface renders a `<section>`, which is a
- * region and not a `contentinfo`, so without the wrapper the page would ship with no
- * footer landmark at all. Surface is given no `label` for the same reason: an unnamed
- * `<section>` is a generic container, so the tree reads contentinfo → content, with no
- * redundant same-named region inside it. ⚠ page.tsx must NOT wrap `<Footer />` in a second
- * `<footer>` — nested footers publish two contentinfo landmarks.
+ * ⚠ page.tsx must NOT wrap `<Footer />` in a second `<footer>` — nested footers publish two
+ * contentinfo landmarks.
  */
 export function Footer() {
   /*
@@ -65,21 +96,73 @@ export function Footer() {
    * library records none.
    */
   const year = new Date().getFullYear();
+  const mask = `url(${subjectMask.src})`;
 
   return (
-    <footer>
-      <Surface tone="ink" rhythm="tight">
-        {/* Stacks in source order below md: identity, then destinations, then the send-off —
-            which is the order it should be read in on a phone, so no reordering is needed. */}
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
-          <Reveal i={0} className="md:col-span-4">
-            {/* The lockup carries the only accessible name down here; the yucca below is
-                decorative and stays hidden from screen readers. */}
-            <Logo mark="lockup" title={footer.address[0]} className="w-44 text-on-ground" />
-            <p className="eyebrow mt-6 text-on-ground-dim">{footer.address[1]}</p>
+    <footer data-tone="paper" className="relative text-ink" style={{ backgroundColor: FLOOR }}>
+      {/* `overflow-clip`, not `overflow-hidden`: hidden would make this box a scroll
+          container and strand the wordmark's view() timeline on a box that never scrolls.
+
+          Capped at the viewport less the sticky masthead (89px once compact), so at the
+          foot of the page the whole scene sits below the bar instead of under it. */}
+      <div className="relative aspect-[4/5] w-full overflow-clip sm:aspect-[3/2] lg:max-h-[calc(100svh-6rem)]">
+        <Photo
+          photo={photo(closer.slug)}
+          sizes="100vw"
+          fill
+          // Must match SCENE_POSITION. A literal, because Tailwind only sees class names
+          // it can read in the source.
+          className="object-cover [object-position:46%_40%]"
+        />
+
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            maskImage: mask,
+            WebkitMaskImage: mask,
+            maskSize: "cover",
+            WebkitMaskSize: "cover",
+            maskPosition: SCENE_POSITION,
+            WebkitMaskPosition: SCENE_POSITION,
+            maskRepeat: "no-repeat",
+            WebkitMaskRepeat: "no-repeat",
+          }}
+        >
+          {/* At her hips: the letters pass behind her legs and the bag swinging at her
+              side, which is where the depth reads most clearly. Symmetric drift, so an
+              engine without scroll timelines shows it exactly centred. */}
+          <Drift
+            x={["-1rem", "1rem"]}
+            className="absolute inset-x-4 top-[42%] md:inset-x-[5vw]"
+          >
+            <Logo mark="wordmark" className="block w-full" />
+          </Drift>
+        </div>
+
+        {/* Joins the frame to the floor it runs on into below lg. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-16 lg:hidden"
+          style={{ backgroundImage: `linear-gradient(to bottom, transparent, ${FLOOR})` }}
+        />
+      </div>
+
+      {/*
+       * Below lg: runs on beneath the photograph, on its floor. At lg and up: laid over the
+       * photograph, in the open sweep either side of her. She occupies roughly 29–62% of
+       * the frame's width, so the left three columns and the right three are always clear.
+       */}
+      <div className="px-4 pb-10 pt-4 md:px-[5vw] lg:absolute lg:inset-0 lg:flex lg:flex-col lg:py-[4vw]">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-x-[2vw]">
+          <Reveal i={0} className="lg:col-span-3">
+            {/* The lockup carries the only accessible name down here; the giant wordmark
+                and the yucca are decorative and stay hidden from screen readers. */}
+            <Logo mark="lockup" title={footer.address[0]} className="w-40" />
+            <p className="eyebrow mt-5">{footer.address[1]}</p>
           </Reveal>
 
-          <Reveal i={1} className="md:col-span-3 md:col-start-5">
+          <Reveal i={1} className="lg:col-span-3 lg:col-start-10">
             {/* `space-y-3` needs block children: TextLink is inline-flex, and vertical
                 margin on an inline-level box does not open the line box. The `li` spaces. */}
             <ul className="space-y-3">
@@ -92,32 +175,25 @@ export function Footer() {
               ))}
             </ul>
           </Reveal>
-
-          {/* Spans 8–12 rather than the authored 11–12: see note 2 above. It still closes on
-              the grid's right edge, which is the part of the composition that matters. */}
-          <Reveal i={2} className="md:col-span-5 md:col-start-8">
-            <p className="paragraph-header text-on-ground">{people.lead}</p>
-          </Reveal>
         </div>
 
-        {/* An element, not `border-t`. `draw` is a scaleX transform and a border cannot
-            carry one, so a bordered divider would be the only hairline on the page that
-            simply appears. This is the page-wide pattern (Cover, Booking, People,
-            Collective, Icons). With motion off it paints as a plain 1px rule. */}
-        <Reveal gesture="draw" i={3} className="mt-16 h-px w-full bg-rule" />
-
-        {/* Last index in the beat, so the yucca is the last thing to land rather than the
-            first — structure, then content, then the mark.
-
-            `gap-4` and `shrink-0`: at 390px the copyright line is ~300px of tracked caps
-            and the mark is 24px. They fit, but only just, and `justify-between` alone would
-            let a longer owner-supplied name squeeze the mask element toward zero width —
-            a mask has no intrinsic size to stop it. The gap is the guard, not a nicety. */}
-        <Reveal i={4} className="flex items-center justify-between gap-4 pt-8">
-          <Illustration name="yucca" className="w-6 shrink-0 text-on-ground-dim" />
-          <p className="eyebrow text-on-ground-dim">© {year} {footer.address[0]}</p>
+        {/* Bottom left, in the brightest part of the sweep, under the bag. */}
+        <Reveal i={2} className="mt-10 max-w-[34ch] lg:mt-auto lg:max-w-[24vw]">
+          <p className="paragraph-header text-lg lg:text-xl">{people.lead}</p>
         </Reveal>
-      </Surface>
+
+        {/* No rule above this line on the photograph: the floor is the ground it stands
+            on, and a hairline would cut under her boots. `gap-4` and `shrink-0` keep a long
+            owner name from squeezing the yucca — a mask has no intrinsic size to stop it.
+
+            Static, not `rise`: this is the last line of the document, and the reveal
+            observer ignores the bottom 8% of the viewport — on most screens the page runs
+            out of scroll before the line ever clears it, so it would stay hidden for good. */}
+        <Reveal gesture="none" className="mt-10 flex items-center justify-between gap-4 lg:mt-8">
+          <Illustration name="yucca" className="w-6 shrink-0" />
+          <p className="eyebrow">© {year} {footer.address[0]}</p>
+        </Reveal>
+      </div>
     </footer>
   );
 }

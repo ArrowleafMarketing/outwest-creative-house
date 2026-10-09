@@ -120,7 +120,7 @@ export function Icons() {
           }
         >
           <ul className="flex gap-6 px-4 md:gap-8 md:px-[5vw]">
-            {icons.map((entry) => {
+            {icons.map((entry, i) => {
               // Entries without a series in metadata.ts simply have no `credit` key, so
               // this cannot accidentally print an empty credit line — and no `kind` is
               // passed, because the only honest string for those three is not yet in
@@ -141,7 +141,8 @@ export function Icons() {
                     sizes={SIZES}
                     index={entry.no}
                     credit={credit}
-                    reveal="wipe"
+                    // Alternating, so each frame moves against its neighbours.
+                    drift={i % 2 === 0 ? "down" : "up"}
                   />
                 </li>
               );

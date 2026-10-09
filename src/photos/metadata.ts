@@ -77,6 +77,34 @@ export const photoMetadata: Record<string, PhotoMeta> = {
   "a7500819": { alt: "Cream lounge chair and olive tree beneath blind-slatted light", category: "place", tags: ["empty", "hard-light"] },
   "a7500862": { alt: "Cream lounge chair, olive tree and side table in raking window light", category: "place", tags: ["empty", "hard-light"] },
 
+  // --- Second space drop, October 2026 (Downloads/outwest-website-media-web, 1800px exports).
+  // Five frames in that folder — A7500703, 704, 738, 819, 862 — are the same exposures as
+  // the masters above at lower resolution, and were not imported.
+  "a7500743": { alt: "Olive tree in a terracotta bowl on a plaster table, a curved shadow behind", category: "place", tags: ["empty", "hard-light"] },
+  "a7500749": { alt: "Olive tree on a plaster table against a sweeping arc of shadow", category: "place", tags: ["empty", "hard-light"] },
+  "a7500768": { alt: "Olive tree on a plaster table, window-pane shadows across the wall", category: "place", tags: ["empty", "hard-light"] },
+  "a7500774": { alt: "Bouclé chair arm beside a glass table on a rough stone base, agave and a cream vase", category: "detail", tags: ["empty", "texture"] },
+
+  "a7502389": { alt: "Cognac velvet sofa and a plaster plinth with an aloe against white brick", category: "place", tags: ["empty"] },
+  "a7502393": { alt: "Sofa arm, aloe on a plinth and a rough plaster column against white brick", category: "detail", tags: ["empty", "texture"] },
+  "a7502394": { alt: "A row of six chairs — velvet, leather and chrome — along a white brick warehouse wall", category: "place", tags: ["empty"] },
+  "a7502421": { alt: "Seated in a cream coat among a row of mismatched chairs in the warehouse", category: "place" },
+  "a7502505": { alt: "Walking past a row of chairs in the warehouse, blurred mid-stride", category: "place", tags: ["motion"] },
+  "a7502831": { alt: "Wooden chaise with a striped towel among lemon and olive trees", category: "place", tags: ["empty"] },
+  "a7502833": { alt: "Overhead of a book on a pale wood table beside a cream cushion", category: "detail", tags: ["empty", "texture"] },
+  "a7502837": { alt: "Tan leather chair beside a fern in a sculptural planter against warm plaster", category: "place", tags: ["empty"] },
+  "a7502846": { alt: "Cream bouclé chair and a bamboo palm in a band of raking light", category: "place", tags: ["empty", "hard-light"] },
+  "a7502848": { alt: "Close frame of a cream bouclé chair and palm in low side light", category: "detail", tags: ["empty", "hard-light", "texture"] },
+  "a7502849-white-baseboard": { alt: "Cream bouclé chair and a bamboo palm on a pale wood floor", category: "place", tags: ["empty", "hard-light"] },
+  "a7502855": { alt: "Overhead of a glass coffee table — agave, stone spheres, a cream vase and a linen book", category: "detail", tags: ["empty", "texture"] },
+  "a7502859": { alt: "Looking down on a bouclé chair arm and a potted palm in hard light", category: "detail", tags: ["empty", "hard-light", "texture"] },
+  "a7502861": { alt: "Overhead of agave leaves crossing a glass table with stone and ceramic objects", category: "detail", tags: ["empty", "texture"] },
+  "a7502866": { alt: "Fluted wood panelling in soft side light", category: "detail", tags: ["empty", "texture"] },
+  "a7502867": { alt: "Close study of fluted wood panelling, light falling across the ribs", category: "detail", tags: ["empty", "texture"] },
+  "a7502869": { alt: "Olive velvet sofa, brass mushroom lamp and an aloe on a round wood side table", category: "place", tags: ["empty"] },
+  "a7502873": { alt: "Arched plaster niche holding a terracotta vase of eucalyptus", category: "detail", tags: ["empty", "texture"] },
+  "a7502875": { alt: "Overhead of an olive tree in a speckled stone planter on terracotta tile", category: "detail", tags: ["empty", "texture"] },
+
   "dsc-8329": { alt: "Seated in a berry dress beside a leather chair in hard light", category: "person", tags: ["hard-light"] },
   "dsc-8431": { alt: "Seated in a blush dress beneath an olive tree and plaster arch", category: "person" },
   "dsc-8488": { alt: "Photographers working a set together in the studio", category: "person", tags: ["bts", "group"] },

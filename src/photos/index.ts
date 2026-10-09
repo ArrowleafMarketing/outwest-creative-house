@@ -14,10 +14,33 @@ import p_a7402481 from "./files/a7402481.webp";
 import p_a7500703_2 from "./files/a7500703-2.webp";
 import p_a7500704_2 from "./files/a7500704-2.webp";
 import p_a7500738_2 from "./files/a7500738-2.webp";
+import p_a7500743 from "./files/a7500743.webp";
 import p_a7500748 from "./files/a7500748.webp";
+import p_a7500749 from "./files/a7500749.webp";
+import p_a7500768 from "./files/a7500768.webp";
 import p_a7500769 from "./files/a7500769.webp";
+import p_a7500774 from "./files/a7500774.webp";
 import p_a7500819 from "./files/a7500819.webp";
 import p_a7500862 from "./files/a7500862.webp";
+import p_a7502389 from "./files/a7502389.webp";
+import p_a7502393 from "./files/a7502393.webp";
+import p_a7502394 from "./files/a7502394.webp";
+import p_a7502421 from "./files/a7502421.webp";
+import p_a7502505 from "./files/a7502505.webp";
+import p_a7502831 from "./files/a7502831.webp";
+import p_a7502833 from "./files/a7502833.webp";
+import p_a7502837 from "./files/a7502837.webp";
+import p_a7502846 from "./files/a7502846.webp";
+import p_a7502848 from "./files/a7502848.webp";
+import p_a7502849_white_baseboard from "./files/a7502849-white-baseboard.webp";
+import p_a7502855 from "./files/a7502855.webp";
+import p_a7502859 from "./files/a7502859.webp";
+import p_a7502861 from "./files/a7502861.webp";
+import p_a7502866 from "./files/a7502866.webp";
+import p_a7502867 from "./files/a7502867.webp";
+import p_a7502869 from "./files/a7502869.webp";
+import p_a7502873 from "./files/a7502873.webp";
+import p_a7502875 from "./files/a7502875.webp";
 import p_denim_daze_06 from "./files/denim-daze-06.webp";
 import p_denim_daze_09 from "./files/denim-daze-09.webp";
 import p_denim_daze_13 from "./files/denim-daze-13.webp";
@@ -104,10 +127,33 @@ const files_: ReadonlyArray<[string, StaticImageData]> = [
   ["a7500703-2", p_a7500703_2],
   ["a7500704-2", p_a7500704_2],
   ["a7500738-2", p_a7500738_2],
+  ["a7500743", p_a7500743],
   ["a7500748", p_a7500748],
+  ["a7500749", p_a7500749],
+  ["a7500768", p_a7500768],
   ["a7500769", p_a7500769],
+  ["a7500774", p_a7500774],
   ["a7500819", p_a7500819],
   ["a7500862", p_a7500862],
+  ["a7502389", p_a7502389],
+  ["a7502393", p_a7502393],
+  ["a7502394", p_a7502394],
+  ["a7502421", p_a7502421],
+  ["a7502505", p_a7502505],
+  ["a7502831", p_a7502831],
+  ["a7502833", p_a7502833],
+  ["a7502837", p_a7502837],
+  ["a7502846", p_a7502846],
+  ["a7502848", p_a7502848],
+  ["a7502849-white-baseboard", p_a7502849_white_baseboard],
+  ["a7502855", p_a7502855],
+  ["a7502859", p_a7502859],
+  ["a7502861", p_a7502861],
+  ["a7502866", p_a7502866],
+  ["a7502867", p_a7502867],
+  ["a7502869", p_a7502869],
+  ["a7502873", p_a7502873],
+  ["a7502875", p_a7502875],
   ["denim-daze-06", p_denim_daze_06],
   ["denim-daze-09", p_denim_daze_09],
   ["denim-daze-13", p_denim_daze_13],

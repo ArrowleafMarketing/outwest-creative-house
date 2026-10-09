@@ -10,8 +10,8 @@
  *                        the body renders.
  *
  * Reveal (this file) animates opacity / translate / scale / clip-path.
- * Drift (below) animates transform. They are disjoint on purpose, so both can sit on the
- * same element and compose instead of overwriting each other.
+ * Drift and Plate drift (below) animate transform. They are disjoint on purpose, so both
+ * can sit on the same element and compose instead of overwriting each other.
  */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -29,8 +29,9 @@
     translate: 0 0;
   }
 
-  /* wipe — all photographs entering from below. Uncovers rather than slides, and
-     does not resample the image.
+  /* wipe — display lines entering from below. Uncovers rather than slides.
+     Photographs no longer use it: they are present from first paint and move only
+     with the scroll (see Plate drift, below).
  
      THE CLIP IS ON THE CHILD, NOT THE OBSERVED ELEMENT, and it has to stay that way.
      IntersectionObserver measures the intersection RECT, which clip-path collapses to
@@ -109,12 +110,87 @@
       animation-timeline: view();
       animation-range: entry 0% exit 100%;
     }
+
+    /*
+     * Plate drift — every photograph, in two opposed layers. The plate travels 1rem one
+     * way across the scroll, the same quiet distance as the drifting display lines,
+     * while the image inside its frame pans a few percent the OTHER way: a window
+     * sliding over a picture that barely moves on screen. Neighbouring plates are
+     * authored in different directions (see Plate).
+     *
+     * THE TIMELINE IS NAMED ON THE FIGURE, NOT view() ON THE IMG. The image frame is
+     * overflow:hidden, and overflow:hidden makes an element a scroll container — so an
+     * anonymous view() on the img would bind to a frame that can never scroll, the
+     * timeline would be inactive, and nothing would move. The figure names its own view
+     * timeline, drives itself from it, and lends it to the img.
+     *
+     * Amplitude is a percentage of the image, so every size of plate travels in
+     * proportion. scale(1.07) leaves 3.5% of overscan per edge against 2.5% of travel:
+     * no edge can ever be exposed. Symmetric about zero, so engines without scroll
+     * timelines show the image exactly as composed, at scale 1.
+     */
+    @keyframes ow-plate-frame {
+      from {
+        transform: translate3d(calc(var(--frame-x) * -1), calc(var(--frame-y) * -1), 0);
+      }
+      to {
+        transform: translate3d(var(--frame-x), var(--frame-y), 0);
+      }
+    }
+    @keyframes ow-plate-drift {
+      from {
+        transform: translate3d(calc(var(--plate-x) * -1), calc(var(--plate-y) * -1), 0) scale(1.07);
+      }
+      to {
+        transform: translate3d(var(--plate-x), var(--plate-y), 0) scale(1.07);
+      }
+    }
+    [data-motion="on"] [data-plate-drift] {
+      view-timeline: --plate block;
+    }
+    [data-motion="on"] [data-plate-drift]:not([data-plate-anchored]) {
+      animation: ow-plate-frame linear both;
+      animation-timeline: --plate;
+      animation-range: entry 0% exit 100%;
+    }
+    [data-motion="on"] [data-plate-drift] img {
+      animation: ow-plate-drift linear both;
+      animation-timeline: --plate;
+      animation-range: entry 0% exit 100%;
+    }
+    /* direction = which way the IMAGE travels as the page scrolls down; the plate
+       always travels the opposite way along the same axis */
+    [data-plate-drift="right"] { --plate-x: 2.5%;  --plate-y: 0%;    --frame-x: -1rem; --frame-y: 0rem; }
+    [data-plate-drift="left"]  { --plate-x: -2.5%; --plate-y: 0%;    --frame-x: 1rem;  --frame-y: 0rem; }
+    [data-plate-drift="down"]  { --plate-x: 0%;    --plate-y: 2.5%;  --frame-x: 0rem;  --frame-y: -1rem; }
+    [data-plate-drift="up"]    { --plate-x: 0%;    --plate-y: -2.5%; --frame-x: 0rem;  --frame-y: 1rem; }
+
+    /* Inside the ICONS rail the nearest scroller is the rail itself, which only scrolls
+       sideways — a plate's own view timeline would sit inactive. The unscrolled
+       rail-frame supplies the timeline instead, so the row drifts with the page. The
+       plates themselves hold still: the scroller clips vertically as well, so a
+       travelling plate would lose a strip off its top edge. */
+    [data-motion="on"] .rail-frame {
+      view-timeline: --plate block;
+    }
+    [data-motion="on"] .rail [data-plate-drift] {
+      view-timeline: none;
+      animation: none;
+    }
   }
 }
 
 /* The ICONS rail. Native overflow-x — no scroll-jacking, no pinned section.
    `proximity` rather than `mandatory`, which fights trackpad momentum. */
 .rail {
+  /* overflow-x: auto silently computes overflow-y to auto as well, so the captions'
+     pre-reveal `rise` offset (20px below their box) made the rail a vertical scroller
+     that swallowed the page's wheel. Pin the block axis shut so vertical scroll always
+     reaches the page, and give that 20px travel room to land in without being clipped —
+     the negative margin cancels it so nothing below moves. */
+  overflow-y: hidden;
+  padding-block-end: 1.5rem;
+  margin-block-end: -1.5rem;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -141,4 +217,94 @@
 }
 .rail > * {
   scroll-snap-align: start;
+}
+
+/**
+ * The shoots index (ShootFinder.tsx) — the site's one view transition, and the one place
+ * motion answers a click rather than the scroll.
+ *
+ * Every rule sits under no-preference AND ShootFinder only starts a transition when the
+ * data-motion flag is on, so reduced motion gets the same state change with none of this.
+ *
+ * Each selector is its own rule on purpose. `view-transition-class` and `:only-child` on
+ * the transition pseudos are newer than view transitions themselves, and one unsupported
+ * selector in a list drops the whole list — split, an older engine loses only the tuning
+ * and falls back to the default cross-fade.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /* No page-wide cross-fade: only the tiles and the sheet move. Scoped to this
+     transition by the flag ShootFinder sets on <html> for its duration. */
+  html[data-shoots-vt]::view-transition-old(root) {
+    display: none;
+  }
+  html[data-shoots-vt]::view-transition-new(root) {
+    animation: none;
+  }
+
+  /* The grid re-flowing into a column. Same drift curve as the photographs. */
+  ::view-transition-group(.shoot-tile) {
+    animation-duration: 680ms;
+    animation-timing-function: var(--ease-drift);
+  }
+  /* The tile's old face leaves fast so the two faces never read as a double exposure. */
+  ::view-transition-old(.shoot-tile) {
+    animation-duration: 220ms;
+  }
+  ::view-transition-new(.shoot-tile) {
+    animation-duration: 680ms;
+    animation-timing-function: var(--ease-editorial);
+  }
+
+  /* Moving between shoots: a quiet cross-fade while the sheet resizes. */
+  ::view-transition-group(shoot-panel) {
+    animation-duration: 520ms;
+    animation-timing-function: var(--ease-drift);
+  }
+
+  /* Opening — only-child means there was no sheet before, so this is an entrance, not a
+     swap. Wipes open from the right edge while travelling the last few percent in. */
+  @keyframes ow-shoot-in {
+    from {
+      clip-path: inset(0 0 0 100%);
+      translate: 6% 0;
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+      translate: 0 0;
+    }
+  }
+  @keyframes ow-shoot-out {
+    from {
+      clip-path: inset(0 0 0 0);
+      translate: 0 0;
+    }
+    to {
+      clip-path: inset(0 0 0 100%);
+      translate: 6% 0;
+    }
+  }
+  ::view-transition-new(shoot-panel):only-child {
+    animation: ow-shoot-in 820ms var(--ease-drift) both;
+  }
+  ::view-transition-old(shoot-panel):only-child {
+    animation: ow-shoot-out 460ms var(--ease-editorial) both;
+  }
+
+  /* Below md the sheet is the whole screen, so it slides rather than wipes. */
+  @media (max-width: 767.98px) {
+    @keyframes ow-shoot-in-sheet {
+      from {
+        translate: 100% 0;
+      }
+      to {
+        translate: 0 0;
+      }
+    }
+    ::view-transition-new(shoot-panel):only-child {
+      animation: ow-shoot-in-sheet 620ms var(--ease-drift) both;
+    }
+    ::view-transition-old(shoot-panel):only-child {
+      animation: ow-shoot-in-sheet 420ms var(--ease-editorial) reverse both;
+    }
+  }
 }

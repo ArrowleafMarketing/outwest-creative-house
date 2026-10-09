@@ -67,7 +67,9 @@ export function TheHouse() {
                   slug={space.wide}
                   ratio="native"
                   sizes={SIZES_MAJOR}
-                  reveal="wipe"
+                  // The room pans sideways, reversing on the middle space; the occupied
+                  // frame beside it settles downward, so the pair never move as one.
+                  drift={flipped ? "left" : "right"}
                   // A portrait frame at native ratio in the wide slot runs over 1,200px
                   // tall — the Villa has no landscape frame in the library at all. Cap it,
                   // but crop from the BOTTOM: a centred object-cover takes equal bites off
@@ -81,7 +83,7 @@ export function TheHouse() {
                   slug={space.tall}
                   ratio="native"
                   sizes={SIZES_MINOR}
-                  reveal="wipe"
+                  drift="down"
                   className="md:mt-14 md:[&_img]:max-h-[56svh] md:[&_img]:object-cover md:[&_img]:object-[50%_18%]"
                 />
               }

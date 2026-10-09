@@ -1,13 +1,20 @@
 # Photo library
 
-79 web-ready frames, indexed and typed. Import from `@/photos`, render with
+102 web-ready frames, indexed and typed. Import from `@/photos`, render with
 `@/components/Photo`. Browse everything at **`/photos`** — filterable by category,
 series and tag.
 
-> **More space photography is coming.** The client is shooting the room unpeopled, and
-> presenting the space is a large part of the site. Seven of those frames have landed so
-> far (tagged `empty`); build with what's here and expect this set to grow — the importer
-> and index regenerate cleanly, so new drops are a two-command job.
+> **Space photography arrives in drops.** The client is shooting the rooms unpeopled, and
+> presenting the space is a large part of the site. Two drops have landed (tagged `empty`);
+> expect more — the importer and index regenerate cleanly, so a new drop is a two-command job.
+>
+> **October 2026 drop:** 23 frames from `~/Downloads/outwest-website-media-web` (1800px web
+> exports, imported with `--source`). Five more files in that folder — `A7500703`, `704`,
+> `738`, `819`, `862` — are the same exposures as masters already here at higher resolution,
+> and were skipped. The drop finally covers the Warehouse (white brick, concrete, a row of
+> mismatched chairs), the Lounge (velvet, bouclé, brass) and real texture (fluted wood, a
+> plaster niche, terracotta tile). Which room each frame belongs to is inferred from what is
+> visible — see the note at the top of `src/content/house.ts`.
 
 ## Where things live
 
@@ -62,7 +69,7 @@ gallery dump. `editorialRhythm()` does that for you.
 
 ## What the library actually holds
 
-Worth knowing before designing around it. **40 person · 15 work · 18 place · 6 detail.**
+Worth knowing before designing around it. **41 person · 15 work · 29 place · 17 detail.**
 
 - **Still portrait-dominant.** Editorial bands and full-bleed heroes are landscape-shaped,
   so many frames need cropping via `PhotoBand` rather than driving their own ratio. The
@@ -72,9 +79,10 @@ Worth knowing before designing around it. **40 person · 15 work · 18 place · 
   and hard blind-slatted light throwing long shadows. `a7500819` and `a7500862` are the
   strongest — they read like the Amangiri / Altter register the brief asks for.
   `a7500738-2` is a natural thin full-bleed band at roughly 21:9.
-- **Texture finally exists, barely.** `a7500704-2` is the first true material shot — cast
-  plaster grain under a wooden bowl — and `a7500748` is a shadow study. Two frames, tagged
-  `texture`. The brief wants limewash, leather, chrome, linen and hands; that's still open.
+- **Texture now has a real set** — thirteen frames tagged `texture`: cast plaster grain
+  (`a7500704-2`), fluted wood (`a7502866`, `a7502867`), a plaster niche (`a7502873`),
+  terracotta tile (`a7502875`), bouclé in hard light (`a7502848`, `a7502859`). Leather, chrome
+  and hands are still open.
 - **8 of the 18 `place` frames are holiday sets** (tagged `holiday`) — seasonal, not usable
   on the evergreen site. Three more are behind-the-scenes. Filter with
   `byTag("empty")` for the composed space, not `byCategory("place")`.

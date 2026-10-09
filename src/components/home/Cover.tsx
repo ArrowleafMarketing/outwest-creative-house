@@ -4,31 +4,76 @@ import { Reveal } from "@/components/motion/Reveal";
 import { cover } from "@/content/home";
 
 /**
- * GAP — src/content/home.ts exports no slug for the cover frame, though every other
- * beat's slugs live there. It belongs in `cover` as `slug: "dsc-9333"`; it sits here only
- * because this file may not edit that one. Move it and delete this constant.
- */
-const COVER_SLUG = "dsc-9333";
-
-/**
  * Assembled from the cover's own copy rather than written out a second time, so the
  * house's name has exactly one source on the page.
  */
 const HOUSE_NAME = `${cover.lines.join(" ")} ${cover.sub}`;
 
 /**
+ * The right half of the cover: three frames overlapping like prints laid on a table.
+ *
+ * The box is a fixed 10:11 and every frame is placed in percentages of it, so the
+ * composition scales as one object instead of re-flowing. Above md its WIDTH is derived from
+ * the viewport height (67svh × 10/11 ≈ 74svh tall), so the collage and the wordmark's single
+ * action always share the first screen.
+ *
+ *   lead    60% wide, top right, hard against the bled edge. The LCP image: eager, `settle`.
+ *   cross   60% wide, crossing the lead's lower-left corner — the overlap is the gesture.
+ *   detail  26% wide, pinned bottom right over the lead's foot.
+ *
+ * The overlapping frames sit on a ground-coloured mat (padding in bg-ground) rather than a
+ * shadow: the brand has no drop shadows, and a paper border is how prints actually overlap.
+ * Every frame drifts VERTICALLY only — the lead and, on a phone, the cross touch a viewport
+ * edge, and sideways travel there would scroll the page horizontally.
+ *
+ * The overlapping frames are `anchored`: only the image pans, inside a frame that holds
+ * still. A travelling frame slides within its mat, so the cutout would read thick on one
+ * side and thin on the other — the mat has to be the same width on every edge, always.
+ */
+const MAT = "bg-ground p-2 md:p-3";
+
+function CoverCollage() {
+  return (
+    <div className="relative aspect-[10/11] w-full md:ms-auto md:w-[min(100%,67svh)]">
+      <div className="absolute right-0 top-0 w-[60%]">
+        <Plate
+          slug={cover.frames.lead}
+          // 60% of a ~50vw column on md+; 60% of the full width below it.
+          sizes="(min-width: 768px) 32vw, 62vw"
+          eager
+          reveal="settle"
+          drift="down"
+          anchored
+        />
+      </div>
+
+      <Reveal gesture="wipe" i={2} className="absolute bottom-[14%] left-0 z-10 w-[60%]">
+        <div className={MAT}>
+          <Plate slug={cover.frames.cross} sizes="(min-width: 768px) 32vw, 62vw" drift="up" anchored />
+        </div>
+      </Reveal>
+
+      <Reveal gesture="wipe" i={3} className="absolute bottom-0 right-[4%] z-20 w-[26%]">
+        <div className={MAT}>
+          <Plate slug={cover.frames.detail} sizes="(min-width: 768px) 14vw, 28vw" drift="down" anchored />
+        </div>
+      </Reveal>
+    </div>
+  );
+}
+
+/**
  * Beat 01.
  *
  * There is no film, and a slow pan across a still is a fake film that looks like a fake
  * film — so the house opens the other way a fashion house opens: a cover. One wordmark,
- * one frame, one action. A full-bleed still would also pre-burn the frame beat 04 needs.
+ * one collage, one action. A full-bleed still would also pre-burn the frame beat 04 needs.
  *
- * dsc-9333 earns the slot because directional light as a graphic element is the brand's
- * signature device and this frame carries its own hard cast shadow, with no props to date
- * it. At native ratio in a half-width column it crops essentially nothing, which is the
- * whole reason for opening this way rather than with a cropped landscape band.
+ * The collage (above) leads with hard sun and an olive shadow on plaster — directional
+ * light as a graphic element, the brand's signature — then crosses it with western through
+ * a fashion lens, and pins a plaster niche at the foot. Light, people, place.
  *
- * LCP — this plate is the LCP element. `eager` compiles to loading="eager" +
+ * LCP — the collage's lead plate is the LCP element. `eager` compiles to loading="eager" +
  * fetchPriority="high" rather than Next 16's `preload`, because the LCP candidate varies
  * by viewport here. `settle` is scale-only with no opacity change, so the image is fully
  * painted at t=0.
@@ -94,30 +139,7 @@ export function Cover() {
             <div className="hidden md:mt-24 md:block">{enter}</div>
           </>
         }
-        right={
-          <Plate
-            slug={COVER_SLUG}
-            // ~46vw on md+: a col-span-6 of a 12-column grid inside the 90vw gutter, plus
-            // the 5vw the right bleed reclaims. 50vw is the nearest honest overshoot —
-            // never under-state the width of the LCP image. Below md the bleed runs the
-            // frame to both edges, so it really is 100vw.
-            sizes="(min-width: 768px) 50vw, 100vw"
-            eager
-            reveal="settle"
-            // NO `rail`. The spec asks for "OUTWEST — NO. 01", which exists nowhere in
-            // src/content/home.ts, and an edition number is exactly the kind of thing that
-            // must not be invented. The nearest exported string, `yucca.place`, is another
-            // beat's place label and would set the word OUTWEST vertically beside the
-            // OUTWEST wordmark. Add `rail` to `cover` in the content file to restore it.
-            //
-            // The cap sits on the img, not on the figure: the figure's height is content
-            // driven, so a max-height there has nothing for `h-full` to resolve against
-            // and the frame simply overflows. Capping the img's own height against its
-            // definite width is what lets object-cover take the crop — and it stays a
-            // maximum, so a shorter viewport is left alone.
-            className="md:[&_img]:max-h-[68svh] md:[&_img]:object-cover md:[&_img]:object-[50%_22%]"
-          />
-        }
+        right={<CoverCollage />}
       />
 
       <div className="mt-14 md:hidden">{enter}</div>

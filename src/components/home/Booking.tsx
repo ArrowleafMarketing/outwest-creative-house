@@ -77,7 +77,7 @@ export function Booking() {
        * slot and the beat gets MORE letterbox, not less.
        */}
       <Surface tone="paper" rhythm="flush" gutter={false}>
-        <Plate slug={BAND_SLUG} ratio="native" sizes="100vw" reveal="wipe" />
+        <Plate slug={BAND_SLUG} ratio="native" sizes="100vw" drift="right" anchored />
       </Surface>
     </>
   );
