@@ -121,6 +121,13 @@
   --color-on-ground-dim: var(--on-ground-dim);
 }
 
+/* In-page anchors (ENTER THE HOUSE →) glide rather than jump. layout.tsx's
+   data-scroll-behavior="smooth" tells Next to suspend this during route changes, and the
+   reduced-motion block at the foot of this file forces it back to auto. */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

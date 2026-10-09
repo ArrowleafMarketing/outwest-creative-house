@@ -32,6 +32,7 @@ const PANEL_ID = "masthead-menu";
 const NAV_LABEL = "Primary";
 const MENU_LABEL = "MENU";
 const CLOSE_LABEL = "CLOSE";
+const HOME_LABEL = "OutWest Creative House — home";
 
 /**
  * MENU and CLOSE cannot be TextLinks: TextLink is an anchor with an href, and these are
@@ -234,7 +235,20 @@ export function Masthead() {
                 without this the row cannot shrink below ~344px and the whole DOCUMENT
                 scrolls sideways at 320px with BOOK clipped off-screen. w-28 at the
                 narrow end, the spec's w-44 from md up. */}
-            <div className="col-start-1 row-start-1 grid min-w-0 items-center justify-items-start">
+            {/* The mark is always the way home, whichever of the two is showing. Already on
+                the homepage, next/link would treat "/" as a no-op (or only strip a #hash), so
+                there it scrolls back to the top instead — clearing the hash as it goes. */}
+            <Link
+              href="/"
+              aria-label={HOME_LABEL}
+              onClick={(event) => {
+                if (pathname !== "/") return;
+                event.preventDefault();
+                window.history.replaceState(null, "", "/");
+                window.scrollTo({ top: 0 });
+              }}
+              className="col-start-1 row-start-1 grid min-w-0 items-center justify-items-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
+            >
               <Logo
                 mark="wordmark"
                 title="OutWest Creative House"
@@ -244,7 +258,7 @@ export function Masthead() {
                 mark="monogram"
                 className={`${MARK_FADE} w-8 ${past ? "opacity-100" : "opacity-0"}`}
               />
-            </div>
+            </Link>
 
             <nav
               aria-label={NAV_LABEL}

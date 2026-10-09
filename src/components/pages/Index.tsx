@@ -9,6 +9,11 @@ export type IndexEntry = {
   href?: string;
 };
 
+/** Same rule as TextLink: in-page anchors must be native so a repeat click still scrolls. */
+function anchorFor(href: string) {
+  return href.startsWith("#") ? "a" : Link;
+}
+
 /**
  * A hairline-ruled, numbered index — the homepage's membership-tier device, generalised.
  * Used wherever a page lists a small set of things (pillars, steps, shoots) so that none of
@@ -20,7 +25,9 @@ export type IndexEntry = {
 export function Index({ entries, className }: { entries: readonly IndexEntry[]; className?: string }) {
   return (
     <div className={className}>
-      {entries.map((entry, i) => (
+      {entries.map((entry, i) => {
+        const Anchor = entry.href ? anchorFor(entry.href) : null;
+        return (
         <div key={entry.no}>
           <Reveal gesture="draw" i={i} className="h-px w-full bg-rule" />
           <Reveal
@@ -30,10 +37,10 @@ export function Index({ entries, className }: { entries: readonly IndexEntry[]; 
           >
             <span className="eyebrow text-on-ground-dim md:col-span-2">{entry.no}</span>
             <h3 className="font-display text-2xl uppercase tracking-display md:col-span-4">
-              {entry.href ? (
+              {entry.href && Anchor ? (
                 // Not a TextLink: that component is eyebrow type by construction, and this
                 // is a display title that happens to be a link. Same hairline, same timing.
-                <Link
+                <Anchor
                   href={entry.href}
                   className="relative inline-flex items-baseline gap-3 after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:opacity-60 after:transition-transform after:duration-[420ms] after:ease-[var(--ease-editorial)] group-hover:after:scale-x-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current focus-visible:after:scale-x-100"
                 >
@@ -44,7 +51,7 @@ export function Index({ entries, className }: { entries: readonly IndexEntry[]; 
                   >
                     →
                   </span>
-                </Link>
+                </Anchor>
               ) : (
                 entry.title
               )}
@@ -63,7 +70,8 @@ export function Index({ entries, className }: { entries: readonly IndexEntry[]; 
             ) : null}
           </Reveal>
         </div>
-      ))}
+        );
+      })}
       <Reveal gesture="draw" i={entries.length} className="h-px w-full bg-rule" />
     </div>
   );

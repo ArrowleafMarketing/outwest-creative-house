@@ -40,8 +40,13 @@ export function TextLink({
       ? ""
       : "after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:opacity-60 after:transition-transform after:duration-[420ms] after:ease-[var(--ease-editorial)] group-hover:after:scale-x-100 group-focus-visible:after:scale-x-100";
 
+  // In-page anchors ("#the-house") are a plain <a>. next/link treats a click on the URL
+  // you are already on as a no-op, so once the hash is in the address bar a second click on
+  // ENTER THE HOUSE did nothing at all. A native anchor scrolls to its target on every click.
+  const Anchor = href.startsWith("#") ? "a" : Link;
+
   return (
-    <Link
+    <Anchor
       href={href}
       aria-current={ariaCurrent}
       aria-label={ariaLabel}
@@ -56,6 +61,6 @@ export function TextLink({
           →
         </span>
       ) : null}
-    </Link>
+    </Anchor>
   );
 }
