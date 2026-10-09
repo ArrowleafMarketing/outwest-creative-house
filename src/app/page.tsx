@@ -29,16 +29,8 @@ import { Closer } from "@/components/home/Closer";
 export default function Home() {
   return (
     <>
-      {/* Keyboard users would otherwise tab through six nav items and BOOK on every page.
-          Visually hidden until focused, then it lands on the page's own ground. */}
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70] focus:bg-ink focus:px-4 focus:py-3 focus:text-alabaster focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-ink eyebrow"
-      >
-        Skip to content
-      </a>
       <Masthead />
-      <main id="main" tabIndex={-1}>
+      <main id="main">
         <Cover />
         <TheStatement />
         <Manifesto />
